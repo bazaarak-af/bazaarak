@@ -1,47 +1,119 @@
 
 const categories = [
-  "املاک",
-  "وسایل نقلیه",
-  "لوازم الکترونیکی",
-  "خانه و آشپزخانه",
-  "کشاورزی",
-  "دام و طیور",
-  "استخدام و کاریابی",
-  "خدمات",
-  "پوشاک",
+  ["🏠", "املاک"],
+  ["🚗", "وسایل نقلیه"],
+  ["📱", "لوازم الکترونیکی"],
+  ["🛋️", "خانه و آشپزخانه"],
+  ["🚜", "کشاورزی"],
+  ["🐄", "دام و طیور"],
+  ["💼", "استخدام"],
+  ["🛠️", "خدمات"],
+  ["👕", "پوشاک"],
+];
+
+const ads = [
+  ["🚗", "موتر سواری تمیز", "قیمت توافقی", "هرات"],
+  ["🏡", "خانه مسکونی", "قیمت توافقی", "هرات"],
+  ["📱", "موبایل هوشمند", "قیمت توافقی", "کابل"],
+  ["🐔", "مرغ تخم‌گذار سالم", "قیمت توافقی", "هرات"],
 ];
 
 export default function Home() {
   return (
-    <main className="site">
-      <header className="header">
-        <h1>بازارک</h1>
-        <p>بازار آنلاین افغانستان</p>
+    <main className="site" dir="rtl">
+      <header className="topbar">
+        <div className="brand">🛍️ بازارک</div>
+        <nav>
+          <a href="#">صفحه اصلی</a>
+          <a href="#categories">دسته‌بندی‌ها</a>
+          <a href="#ads">آگهی‌ها</a>
+          <a href="#">درباره ما</a>
+          <a href="#">تماس با ما</a>
+        </nav>
+        <div className="header-actions">
+          <button className="login">ورود / ثبت‌نام</button>
+          <button className="post-ad">＋ ثبت آگهی رایگان</button>
+        </div>
       </header>
 
-      <section className="hero">
-        <h2>هر چیزی را آسان پیدا کن!</h2>
-        <p>خرید و فروش آسان در سراسر افغانستان</p>
-        <input
-          type="search"
-          placeholder="دنبال چه چیزی می‌گردی؟"
-        />
-        <button>جستجو</button>
+      <section className="hero-banner">
+        <div className="hero-copy">
+          <span>بازار آنلاین افغانستان</span>
+          <h1>بازارک</h1>
+          <h2>همه چیز را در یکجا پیدا کنید!</h2>
+          <p>بخرید، بفروشید و ارتباط بگیرید...</p>
+        </div>
+        <div className="hero-bag">🛍️</div>
       </section>
 
-      <section className="categories">
-        <h2>دسته‌بندی آگهی‌ها</h2>
+      <section className="search-area">
+        <select aria-label="انتخاب ولایت">
+          <option>همه ولایت‌ها</option>
+          <option>هرات</option>
+          <option>کابل</option>
+          <option>قندهار</option>
+          <option>بلخ</option>
+        </select>
+        <input placeholder="چه چیزی را جستجو می‌کنید؟" />
+        <button>جستجو 🔍</button>
+      </section>
+
+      <section className="categories" id="categories">
+        <div className="section-heading">
+          <h2>دسته‌بندی آگهی‌ها</h2>
+          <span>همه دسته‌ها</span>
+        </div>
         <div className="category-grid">
-          {categories.map((category) => (
-            <div className="category" key={category}>
-              {category}
-            </div>
+          {categories.map(([icon, name]) => (
+            <a className="category-card" href="#" key={name}>
+              <span>{icon}</span>
+              <strong>{name}</strong>
+            </a>
           ))}
         </div>
       </section>
 
+      <section className="market-content" id="ads">
+        <aside className="popular">
+          <h3>🔥 دسته‌بندی‌های پرطرفدار</h3>
+          {categories.slice(0, 8).map(([icon, name]) => (
+            <div className="popular-item" key={name}>
+              <span>{icon}</span> {name}
+            </div>
+          ))}
+        </aside>
+
+        <div className="featured">
+          <div className="section-heading">
+            <h2>⭐ آگهی‌های ویژه</h2>
+            <a href="#">مشاهده همه ←</a>
+          </div>
+          <div className="ads-grid">
+            {ads.map(([icon, title, price, city]) => (
+              <article className="ad-card" key={title}>
+                <div className="ad-image">{icon}</div>
+                <div className="ad-info">
+                  <strong>{title}</strong>
+                  <b>{price}</b>
+                  <small>📍 {city}</small>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="trust">
+        <div>👥<strong>بازار آنلاین افغانستان</strong></div>
+        <div>⚡<strong>استفاده آسان</strong></div>
+        <div>🛡️<strong>نظارت بر آگهی‌ها</strong></div>
+        <div>🎧<strong>پشتیبانی کاربران</strong></div>
+      </section>
+
       <footer>
-        بازارک؛ بازار همه مردم افغانستان
+        <h2>بازارک | Bazaarak</h2>
+        <p>خرید و فروش آسان در سراسر افغانستان</p>
+        <p>تمام حقوق محفوظ است © بازارک</p>
       </footer>
     </main>
   );
