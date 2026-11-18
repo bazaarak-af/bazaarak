@@ -1,0 +1,97 @@
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Tahoma, Arial, sans-serif;
+  background: #f7f9f7;
+  color: #222;
+}
+
+.site {
+  min-height: 100vh;
+}
+
+.header {
+  background: #087a45;
+  color: white;
+  padding: 22px 7%;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 32px;
+}
+
+.header p {
+  margin-bottom: 0;
+}
+
+.hero {
+  background: #e5f4e9;
+  text-align: center;
+  padding: 55px 15px;
+}
+
+.hero h2 {
+  color: #087a45;
+  font-size: 28px;
+}
+
+.hero input {
+  display: block;
+  width: min(90%, 450px);
+  margin: 25px auto 12px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.hero button {
+  background: #087a45;
+  color: white;
+  border: 0;
+  border-radius: 8px;
+  padding: 13px 35px;
+  font-size: 16px;
+}
+
+.categories {
+  padding: 30px 7%;
+}
+
+.categories h2 {
+  color: #087a45;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.category {
+  background: white;
+  border: 1px solid #e0e8e1;
+  border-radius: 10px;
+  padding: 24px 8px;
+  text-align: center;
+  font-weight: bold;
+}
+
+footer {
+  margin-top: 40px;
+  padding: 25px;
+  text-align: center;
+  background: #087a45;
+  color: white;
+}
+
+@media (max-width: 600px) {
+  .category-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
