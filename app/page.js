@@ -114,21 +114,24 @@ useEffect(() => {
             <a href="#">مشاهده همه ←</a>
           </div>
           <div className="ads-grid">
-        {ads.map((item) => (
-  <article className="ad-card" key={item.id}>
-    <div className="ad-image">📦</div>
-    <div className="ad-info">
-      <strong>{item.title}</strong>
-      <b>
-        {item.price
-          ? item.price.toLocaleString() + " افغانی"
-          : "قیمت توافقی"}
-      </b>
-      <small>📍 {item.city}</small>
-    </div>
-  </article>
-))
-          </div>
+  {ads.map((item) => (
+    <article className="ad-card" key={item.id}>
+      <div className="ad-image">📦</div>
+
+      <div className="ad-info">
+        <strong>{item.title}</strong>
+
+        <b>
+          {item.price
+            ? Number(item.price).toLocaleString() + " افغانی"
+            : "قیمت توافقی"}
+        </b>
+
+        <small>📍 {item.city}</small>
+      </div>
+    </article>
+  ))}
+</div>
         </div>
       </section>
 
