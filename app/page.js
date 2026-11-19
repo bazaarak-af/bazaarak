@@ -15,28 +15,43 @@ const ads = [
 export default function Home() {
 
   const [categories, setCategories] = useState([]);
+useEffect(() => {
+  async function loadCategories() {
+    const { data, error } = await supabase
+      .from("categories")
+      .select("*")
+      .order("id");
 
-  useEffect(() => {
-    async function loadCategories() {
-      const { data, error } = await supabase
-        .from("categories")
-        .select("*")
-        .order("id");
-
-      if (error) {
-        console.error("خطا در دریافت دسته‌بندی‌ها:", error);
-        return;
-      }
-
-      if (data) {
-        setCategories(
-          data.map((item) => ["📁", item.name_fa])
-        );
-      }
+    if (error) {
+      console.error("خطا در دریافت دسته‌بندی‌ها:", error);
+      return;
     }
 
-    loadCategories();
-  }, []);
+    if (data) {
+      setCategories(
+        data.map((item) => ["📁", item.name_fa])
+      );
+    }
+  }
+
+  async function loadAds() {
+    const { data, error } = await supabase
+      .from("listings")
+      .select("*")
+      .eq("status", "approved")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("خطا در دریافت آگهی‌ها:", error);
+      return;
+    }
+
+    setAds(data || []);
+  }
+
+  loadCategories();
+  loadAds();
+}, []);
   return (
     <main className="site" dir="rtl">
       <header className="topbar">
