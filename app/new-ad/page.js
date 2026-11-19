@@ -25,32 +25,46 @@ export default function NewAdPage() {
     whatsapp: "",
   });
 
-  useEffect(() => {
-    async function loadPage() {
-      const { data: authData } = await supabase.auth.getUser();
+ 
+useEffect(() => {
+  async function loadPage() {
+    const { data: authData } = await supabase.auth.getUser();
 
-      if (!authData.user) {
-        router.push("/login");
-        return;
-      }
-
-      setUser(authData.user);
-
-      const { data, error } = await supabase
-        .from("categories")
-        .select("id, name_fa")
-        .order("id");
-
-      if (error) {
-        setMessage("دریافت دسته‌بندی‌ها با مشکل روبه‌رو شد.");
-        return;
-      }
-
-      setCategories(data || []);
+    if (!authData.user) {
+      router.push("/login");
+      return;
     }
 
-    loadPage();
-  }, [router]);
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("is_blocked")
+      .eq("id", authData.user.id)
+      .single();
+
+    if (profileError || !profile || profile.is_blocked) {
+      await supabase.auth.signOut();
+      router.push("/login");
+      return;
+    }
+
+    setUser(authData.user);
+
+    const { data, error } = await supabase
+      .from("categories")
+      .select("id, name_fa")
+      .order("id");
+
+    if (error) {
+      setMessage("دریافت دسته‌بندی‌ها با مشکل روبه‌رو شد.");
+      return;
+    }
+
+    setCategories(data || []);
+  }
+
+  loadPage();
+}, [router]);
+ 
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -93,7 +107,20 @@ export default function NewAdPage() {
 
     setLoading(true);
     setMessage("");
+const { data: profile, error: profileError } = await supabase
+  .from("profiles")
+  .select("is_blocked")
+  .eq("id", user.id)
+  .single();
 
+if (profileError || !profile || profile.is_blocked) {
+  await supabase.auth.signOut();
+  setUser(null);
+  setMessage("حساب شما مسدود شده است و امکان ثبت آگهی ندارید.");
+  setLoading(false);
+  router.push("/login");
+  return;
+}
     try {
       // ثبت آگهی
       const { data: listing, error: listingError } = await supabase
