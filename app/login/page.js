@@ -14,6 +14,28 @@ export default function LoginPage() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
+  async function checkUserStatus(userId) {
+    const { data: profile, error } = await supabase
+      .from("profiles")
+      .select("role, is_blocked")
+      .eq("id", userId)
+      .single();
+
+    if (error || !profile) {
+      await supabase.auth.signOut();
+      throw new Error("بررسی وضعیت حساب انجام نشد. لطفاً دوباره تلاش کنید.");
+    }
+
+    if (profile.is_blocked) {
+      await supabase.auth.signOut();
+      throw new Error(
+        "حساب کاربری شما توسط مدیریت بازارک مسدود شده است."
+      );
+    }
+
+    return profile;
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setMessage("");
@@ -28,18 +50,24 @@ export default function LoginPage() {
 
         if (error) throw error;
 
-        if (data.session) {
+        if (data.session && data.user) {
+          await checkUserStatus(data.user.id);
           router.push("/");
         } else {
-          setMessage("ثبت‌نام انجام شد. ایمیل خود را برای تأیید بررسی کنید.");
+          setMessage(
+            "ثبت‌نام انجام شد. ایمیل خود را برای تأیید بررسی کنید."
+          );
         }
       } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
+        const { data, error } =
+          await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
 
         if (error) throw error;
+
+        await checkUserStatus(data.user.id);
 
         router.push("/");
       }
@@ -96,17 +124,26 @@ export default function LoginPage() {
         />
 
         <button type="submit" disabled={loading} style={buttonStyle}>
-          {loading ? "لطفاً صبر کنید..." : isRegister ? "ثبت‌نام" : "ورود"}
+          {loading
+            ? "لطفاً صبر کنید..."
+            : isRegister
+            ? "ثبت‌نام"
+            : "ورود"}
         </button>
 
         {message && (
-          <p style={{ textAlign: "center", color: "#b42318" }}>
+          <p style={{
+            textAlign: "center",
+            color: "#b42318",
+            lineHeight: 1.8
+          }}>
             {message}
           </p>
         )}
 
         <p style={{ textAlign: "center", marginTop: "20px" }}>
           {isRegister ? "قبلاً حساب ساخته‌اید؟" : "حساب کاربری ندارید؟"}
+
           <button
             type="button"
             onClick={() => {
