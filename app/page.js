@@ -6,8 +6,8 @@ import { supabase } from "../lib/supabase";
 export default function Home() {
 
   const [categories, setCategories] = useState([]);
-useEffect(() => {
 const [ads, setAds] = useState([]);
+useEffect(() => {
  async function loadCategories() {
     const { data, error } = await supabase
       .from("categories")
