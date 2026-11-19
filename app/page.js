@@ -3,20 +3,12 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
-
-
-const ads = [
-  ["🚗", "موتر سواری تمیز", "قیمت توافقی", "هرات"],
-  ["🏡", "خانه مسکونی", "قیمت توافقی", "هرات"],
-  ["📱", "موبایل هوشمند", "قیمت توافقی", "کابل"],
-  ["🐔", "مرغ تخم‌گذار سالم", "قیمت توافقی", "هرات"],
-];
-
 export default function Home() {
 
   const [categories, setCategories] = useState([]);
 useEffect(() => {
-  async function loadCategories() {
+const [ads, setAds] = useState([]);
+ async function loadCategories() {
     const { data, error } = await supabase
       .from("categories")
       .select("*")
@@ -122,7 +114,7 @@ useEffect(() => {
             <a href="#">مشاهده همه ←</a>
           </div>
           <div className="ads-grid">
-           ads.map((item) => (
+        {ads.map((item) => (
   <article className="ad-card" key={item.id}>
     <div className="ad-image">📦</div>
     <div className="ad-info">
