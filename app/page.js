@@ -1,15 +1,9 @@
+ 
+"use client";
 
-const categories = [
-  ["🏠", "املاک"],
-  ["🚗", "وسایل نقلیه"],
-  ["📱", "لوازم الکترونیکی"],
-  ["🛋️", "خانه و آشپزخانه"],
-  ["🚜", "کشاورزی"],
-  ["🐄", "دام و طیور"],
-  ["💼", "استخدام"],
-  ["🛠️", "خدمات"],
-  ["👕", "پوشاک"],
-];
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabase";
+
 
 const ads = [
   ["🚗", "موتر سواری تمیز", "قیمت توافقی", "هرات"],
@@ -19,6 +13,30 @@ const ads = [
 ];
 
 export default function Home() {
+
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    async function loadCategories() {
+      const { data, error } = await supabase
+        .from("categories")
+        .select("*")
+        .order("id");
+
+      if (error) {
+        console.error("خطا در دریافت دسته‌بندی‌ها:", error);
+        return;
+      }
+
+      if (data) {
+        setCategories(
+          data.map((item) => ["📁", item.name_fa])
+        );
+      }
+    }
+
+    loadCategories();
+  }, []);
   return (
     <main className="site" dir="rtl">
       <header className="topbar">
