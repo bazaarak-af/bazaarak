@@ -9,6 +9,7 @@ export default function LoginPage() {
   const router = useRouter();
 
   const [isRegister, setIsRegister] = useState(false);
+  const [method, setMethod] = useState("email");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -28,9 +29,7 @@ export default function LoginPage() {
 
     if (profile.is_blocked) {
       await supabase.auth.signOut();
-      throw new Error(
-        "حساب کاربری شما توسط مدیریت بازارک مسدود شده است."
-      );
+      throw new Error("حساب کاربری شما توسط مدیریت بازارک مسدود شده است.");
     }
 
     return profile;
@@ -42,9 +41,13 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
+      if (method === "phone") {
+        throw new Error("ورود با شماره موبایل به‌زودی فعال می‌شود.");
+      }
+
       if (isRegister) {
         const { data, error } = await supabase.auth.signUp({
-          email,
+          email: email.trim(),
           password,
         });
 
@@ -54,21 +57,18 @@ export default function LoginPage() {
           await checkUserStatus(data.user.id);
           router.push("/");
         } else {
-          setMessage(
-            "ثبت‌نام انجام شد. ایمیل خود را برای تأیید بررسی کنید."
-          );
+          setMessage("ثبت‌نام انجام شد. اکنون می‌توانید وارد حساب خود شوید.");
+          setIsRegister(false);
         }
       } else {
-        const { data, error } =
-          await supabase.auth.signInWithPassword({
-            email,
-            password,
-          });
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email.trim(),
+          password,
+        });
 
         if (error) throw error;
 
         await checkUserStatus(data.user.id);
-
         router.push("/");
       }
     } catch (error) {
@@ -102,34 +102,85 @@ export default function LoginPage() {
           {isRegister ? "ساخت حساب کاربری" : "ورود به حساب کاربری"}
         </h2>
 
-        <label>ایمیل</label>
-        <input
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="ایمیل خود را وارد کنید"
-          style={inputStyle}
-        />
+        <div style={{
+          display: "flex",
+          gap: "8px",
+          margin: "20px 0"
+        }}>
+          <button
+            type="button"
+            onClick={() => {
+              setMethod("email");
+              setMessage("");
+            }}
+            style={{
+              ...tabStyle,
+              background: method === "email" ? "#16834a" : "#eee",
+              color: method === "email" ? "white" : "#333"
+            }}
+          >
+            ایمیل
+          </button>
 
-        <label>رمز عبور</label>
-        <input
-          type="password"
-          required
-          minLength={6}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="حداقل ۶ حرف یا عدد"
-          style={inputStyle}
-        />
+          <button
+            type="button"
+            onClick={() => {
+              setMethod("phone");
+              setMessage("ورود با شماره موبایل به‌زودی فعال می‌شود.");
+            }}
+            style={{
+              ...tabStyle,
+              background: method === "phone" ? "#16834a" : "#eee",
+              color: method === "phone" ? "white" : "#333"
+            }}
+          >
+            شماره موبایل
+          </button>
+        </div>
 
-        <button type="submit" disabled={loading} style={buttonStyle}>
-          {loading
-            ? "لطفاً صبر کنید..."
-            : isRegister
-            ? "ثبت‌نام"
-            : "ورود"}
-        </button>
+        {method === "email" && (
+          <>
+            <label>ایمیل</label>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="ایمیل خود را وارد کنید"
+              style={inputStyle}
+            />
+
+            <label>رمز عبور</label>
+            <input
+              type="password"
+              required
+              minLength={6}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="حداقل ۶ حرف یا عدد"
+              style={inputStyle}
+            />
+
+            <button type="submit" disabled={loading} style={buttonStyle}>
+              {loading
+                ? "لطفاً صبر کنید..."
+                : isRegister
+                ? "ثبت‌نام"
+                : "ورود"}
+            </button>
+          </>
+        )}
+
+        {method === "phone" && (
+          <p style={{
+            textAlign: "center",
+            color: "#777",
+            lineHeight: 2,
+            padding: "12px"
+          }}>
+            ورود و ثبت‌نام با شماره موبایل به‌زودی در بازارک فعال می‌شود.
+          </p>
+        )}
 
         {message && (
           <p style={{
@@ -141,27 +192,29 @@ export default function LoginPage() {
           </p>
         )}
 
-        <p style={{ textAlign: "center", marginTop: "20px" }}>
-          {isRegister ? "قبلاً حساب ساخته‌اید؟" : "حساب کاربری ندارید؟"}
+        {method === "email" && (
+          <p style={{ textAlign: "center", marginTop: "20px" }}>
+            {isRegister ? "قبلاً حساب ساخته‌اید؟" : "حساب کاربری ندارید؟"}
 
-          <button
-            type="button"
-            onClick={() => {
-              setIsRegister(!isRegister);
-              setMessage("");
-            }}
-            style={{
-              border: "none",
-              background: "none",
-              color: "#16834a",
-              cursor: "pointer",
-              fontWeight: "bold",
-              marginRight: "6px"
-            }}
-          >
-            {isRegister ? "ورود" : "ثبت‌نام کنید"}
-          </button>
-        </p>
+            <button
+              type="button"
+              onClick={() => {
+                setIsRegister(!isRegister);
+                setMessage("");
+              }}
+              style={{
+                border: "none",
+                background: "none",
+                color: "#16834a",
+                cursor: "pointer",
+                fontWeight: "bold",
+                marginRight: "6px"
+              }}
+            >
+              {isRegister ? "ورود" : "ثبت‌نام کنید"}
+            </button>
+          </p>
+        )}
       </form>
     </main>
   );
@@ -186,5 +239,14 @@ const buttonStyle = {
   border: "none",
   borderRadius: "8px",
   fontSize: "16px",
+  cursor: "pointer"
+};
+
+const tabStyle = {
+  flex: 1,
+  padding: "12px",
+  border: "none",
+  borderRadius: "8px",
+  fontSize: "15px",
   cursor: "pointer"
 };
