@@ -12,6 +12,8 @@ export default function NewAdPage() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [fileInputKey, setFileInputKey] = useState(0);
 
   const [form, setForm] = useState({
     category_id: "",
@@ -54,6 +56,33 @@ export default function NewAdPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
+  function handleFileChange(e) {
+    const files = Array.from(e.target.files || []);
+
+    if (files.length > 5) {
+      setMessage("حداکثر می‌توانید ۵ عکس انتخاب کنید.");
+      setSelectedFiles([]);
+      setFileInputKey((key) => key + 1);
+      return;
+    }
+
+    const invalidFile = files.find(
+      (file) =>
+        !file.type.startsWith("image/") ||
+        file.size > 5 * 1024 * 1024
+    );
+
+    if (invalidFile) {
+      setMessage("فقط عکس با حجم حداکثر ۵ مگابایت انتخاب کنید.");
+      setSelectedFiles([]);
+      setFileInputKey((key) => key + 1);
+      return;
+    }
+
+    setMessage("");
+    setSelectedFiles(files);
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -65,36 +94,93 @@ export default function NewAdPage() {
     setLoading(true);
     setMessage("");
 
-    const { error } = await supabase.from("listings").insert({
-      user_id: user.id,
-      category_id: Number(form.category_id),
-      title: form.title,
-      description: form.description,
-      price: form.price ? Number(form.price) : null,
-      city: form.city,
-      phone: form.phone,
-      whatsapp: form.whatsapp || null,
-      status: "pending",
-    });
+    try {
+      // ثبت آگهی
+      const { data: listing, error: listingError } = await supabase
+        .from("listings")
+        .insert({
+          user_id: user.id,
+          category_id: Number(form.category_id),
+          title: form.title,
+          description: form.description,
+          price: form.price ? Number(form.price) : null,
+          city: form.city,
+          phone: form.phone,
+          whatsapp: form.whatsapp || null,
+          status: "pending",
+        })
+        .select("id")
+        .single();
 
-    setLoading(false);
+      if (listingError) throw listingError;
 
-    if (error) {
-      setMessage("ثبت آگهی ناموفق بود: " + error.message);
-      return;
+      // آپلود عکس‌ها
+      const imageRecords = [];
+
+      for (let i = 0; i < selectedFiles.length; i++) {
+        const file = selectedFiles[i];
+
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+        const filePath =
+          `${user.id}/${listing.id}/${Date.now()}-${i}-${safeName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from("listing-images")
+          .upload(filePath, file);
+
+        if (uploadError) {
+          throw new Error(
+            "آگهی ثبت شد، اما آپلود عکس ناموفق بود: " +
+            uploadError.message
+          );
+        }
+
+        const { data: publicData } = supabase.storage
+          .from("listing-images")
+          .getPublicUrl(filePath);
+
+        imageRecords.push({
+          listing_id: listing.id,
+          image_url: publicData.publicUrl,
+        });
+      }
+
+      // ثبت آدرس عکس‌ها در جدول
+      if (imageRecords.length > 0) {
+        const { error: imageError } = await supabase
+          .from("listing_images")
+          .insert(imageRecords);
+
+        if (imageError) {
+          throw new Error(
+            "آگهی ثبت شد، اما ثبت اطلاعات عکس‌ها ناموفق بود: " +
+            imageError.message
+          );
+        }
+      }
+
+      setMessage(
+        "آگهی و عکس‌های شما با موفقیت ثبت شد و پس از تأیید مدیر منتشر می‌شود."
+      );
+
+      setForm({
+        category_id: "",
+        title: "",
+        description: "",
+        price: "",
+        city: "هرات",
+        phone: "",
+        whatsapp: "",
+      });
+
+      setSelectedFiles([]);
+      setFileInputKey((key) => key + 1);
+
+    } catch (error) {
+      setMessage(error.message || "ثبت آگهی با مشکل روبه‌رو شد.");
+    } finally {
+      setLoading(false);
     }
-
-    setMessage("آگهی شما ثبت شد و پس از تأیید مدیر منتشر می‌شود.");
-
-    setForm({
-      category_id: "",
-      title: "",
-      description: "",
-      price: "",
-      city: "هرات",
-      phone: "",
-      whatsapp: "",
-    });
   }
 
   const inputStyle = {
@@ -198,6 +284,22 @@ export default function NewAdPage() {
           style={inputStyle}
         />
 
+        <label>عکس‌های آگهی (حداکثر ۵ عکس)</label>
+        <input
+          key={fileInputKey}
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleFileChange}
+          style={inputStyle}
+        />
+
+        {selectedFiles.length > 0 && (
+          <p style={{ color: "#16834a", marginTop: "-10px" }}>
+            {selectedFiles.length} عکس انتخاب شده است.
+          </p>
+        )}
+
         <button
           type="submit"
           disabled={loading}
@@ -211,7 +313,7 @@ export default function NewAdPage() {
             fontSize: "16px",
           }}
         >
-          {loading ? "در حال ثبت..." : "ثبت آگهی"}
+          {loading ? "در حال ثبت آگهی و آپلود عکس‌ها..." : "ثبت آگهی"}
         </button>
 
         {message && (
