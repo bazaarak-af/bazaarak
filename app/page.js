@@ -1,63 +1,88 @@
- 
+
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { supabase } from "../lib/supabase";
+
 export default function Home() {
-
   const [categories, setCategories] = useState([]);
-const [ads, setAds] = useState([]);
-useEffect(() => {
- async function loadCategories() {
-    const { data, error } = await supabase
-      .from("categories")
-      .select("*")
-      .order("id");
+  const [ads, setAds] = useState([]);
+  const [images, setImages] = useState({});
 
-    if (error) {
-      console.error("خطا در دریافت دسته‌بندی‌ها:", error);
-      return;
-    }
+  useEffect(() => {
+    async function loadCategories() {
+      const { data, error } = await supabase
+        .from("categories")
+        .select("*")
+        .order("id");
 
-    if (data) {
+      if (error) {
+        console.error("خطا در دریافت دسته‌بندی‌ها:", error);
+        return;
+      }
+
       setCategories(
-        data.map((item) => ["📁", item.name_fa])
+        (data || []).map((item) => ["📁", item.name_fa])
       );
     }
-  }
 
-  async function loadAds() {
-    const { data, error } = await supabase
-      .from("listings")
-      .select("*")
-      .eq("status", "approved")
-      .order("created_at", { ascending: false });
+    async function loadAds() {
+      const { data, error } = await supabase
+        .from("listings")
+        .select("*")
+        .eq("status", "approved")
+        .order("created_at", { ascending: false });
 
-    if (error) {
-      console.error("خطا در دریافت آگهی‌ها:", error);
-      return;
+      if (error) {
+        console.error("خطا در دریافت آگهی‌ها:", error);
+        return;
+      }
+
+      const items = data || [];
+      setAds(items);
+
+      if (items.length === 0) return;
+
+      const { data: imageData, error: imageError } = await supabase
+        .from("listing_images")
+        .select("listing_id, image_url")
+        .in("listing_id", items.map((item) => item.id));
+
+      if (imageError) {
+        console.error("خطا در دریافت عکس‌ها:", imageError);
+        return;
+      }
+
+      const imageMap = {};
+
+      (imageData || []).forEach((img) => {
+        if (!imageMap[img.listing_id]) {
+          imageMap[img.listing_id] = img.image_url;
+        }
+      });
+
+      setImages(imageMap);
     }
 
-    setAds(data || []);
-  }
+    loadCategories();
+    loadAds();
+  }, []);
 
-  loadCategories();
-  loadAds();
-}, []);
   return (
     <main className="site" dir="rtl">
       <header className="topbar">
         <div className="brand">🛍️ بازارک</div>
         <nav>
-          <a href="#">صفحه اصلی</a>
+          <Link href="/">صفحه اصلی</Link>
           <a href="#categories">دسته‌بندی‌ها</a>
           <a href="#ads">آگهی‌ها</a>
           <a href="#">درباره ما</a>
           <a href="#">تماس با ما</a>
         </nav>
         <div className="header-actions">
-          <button className="login">ورود / ثبت‌نام</button>
-          <button className="post-ad">＋ ثبت آگهی رایگان</button>
+          <Link className="login" href="/login">ورود / ثبت‌نام</Link>
+          <Link className="post-ad" href="/new-ad">＋ ثبت آگهی رایگان</Link>
         </div>
       </header>
 
@@ -113,25 +138,43 @@ useEffect(() => {
             <h2>⭐ آگهی‌های ویژه</h2>
             <a href="#">مشاهده همه ←</a>
           </div>
+
           <div className="ads-grid">
-  {ads.map((item) => (
-    <article className="ad-card" key={item.id}>
-      <div className="ad-image">📦</div>
+            {ads.map((item) => (
+              <Link
+                href={`/listing/${item.id}`}
+                className="ad-card"
+                key={item.id}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <div className="ad-image">
+                  {images[item.id] ? (
+                    <img
+                      src={images[item.id]}
+                      alt={item.title}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  ) : (
+                    "📦"
+                  )}
+                </div>
 
-      <div className="ad-info">
-        <strong>{item.title}</strong>
-
-        <b>
-          {item.price
-            ? Number(item.price).toLocaleString() + " افغانی"
-            : "قیمت توافقی"}
-        </b>
-
-        <small>📍 {item.city}</small>
-      </div>
-    </article>
-  ))}
-</div>
+                <div className="ad-info">
+                  <strong>{item.title}</strong>
+                  <b>
+                    {item.price
+                      ? Number(item.price).toLocaleString() + " افغانی"
+                      : "قیمت توافقی"}
+                  </b>
+                  <small>📍 {item.city}</small>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
