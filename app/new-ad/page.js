@@ -188,7 +188,7 @@ export default function NewAdPage() {
 
         const { data, error } = await supabase
           .from("categories")
-          .select("id, name_fa, name_ps")
+          .select("*")
           .order("id");
 
         if (error) throw error;
