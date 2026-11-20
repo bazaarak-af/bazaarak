@@ -5,6 +5,113 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "../lib/supabase";
 
+const translations = {
+  fa: {
+    brand: "بازارک",
+    tagline: "بازار آنلاین افغانستان",
+    home: "صفحه اصلی",
+    categories: "دسته‌بندی‌ها",
+    ads: "آگهی‌ها",
+    login: "ورود / ثبت‌نام",
+    post: "＋ ثبت آگهی رایگان",
+    heroTitle: "همه چیز را در یکجا پیدا کنید!",
+    heroText: "بخرید، بفروشید و آسان ارتباط بگیرید",
+    searchPlaceholder: "چه چیزی را جستجو می‌کنید؟",
+    allCities: "همه ولایت‌ها",
+    allCategories: "همه دسته‌بندی‌ها",
+    search: "جستجو",
+    clear: "پاک کردن فیلترها",
+    categoryTitle: "دسته‌بندی آگهی‌ها",
+    popular: "دسته‌بندی‌های پرطرفدار",
+    latest: "آگهی‌های بازارک",
+    count: "تعداد",
+    loading: "در حال دریافت آگهی‌ها...",
+    searching: "در حال جستجو...",
+    empty: "آگهی‌ای با این مشخصات پیدا نشد.",
+    negotiable: "قیمت توافقی",
+    trust1: "بازار آنلاین افغانستان",
+    trust2: "استفاده آسان",
+    trust3: "نظارت بر آگهی‌ها",
+    trust4: "ارتباط مستقیم",
+    footer: "خرید و فروش آسان در سراسر افغانستان",
+    rights: "تمام حقوق محفوظ است © بازارک",
+    all: "همه دسته‌ها"
+  },
+  ps: {
+    brand: "بازارک",
+    tagline: "د افغانستان آنلاین بازار",
+    home: "کورپاڼه",
+    categories: "کټګورۍ",
+    ads: "اعلانونه",
+    login: "ننوتل / نوملیکنه",
+    post: "＋ وړیا اعلان خپور کړئ",
+    heroTitle: "هر څه په یوه ځای کې ومومئ!",
+    heroText: "واخلئ، وپلورئ او په اسانۍ اړیکه ونیسئ",
+    searchPlaceholder: "څه شی لټوئ؟",
+    allCities: "ټول ولایتونه",
+    allCategories: "ټولې کټګورۍ",
+    search: "لټون",
+    clear: "فلټرونه پاک کړئ",
+    categoryTitle: "د اعلانونو کټګورۍ",
+    popular: "مشهورې کټګورۍ",
+    latest: "د بازارک اعلانونه",
+    count: "شمېر",
+    loading: "اعلانونه ترلاسه کېږي...",
+    searching: "لټون روان دی...",
+    empty: "په دې مشخصاتو کوم اعلان ونه موندل شو.",
+    negotiable: "توافقي بیه",
+    trust1: "د افغانستان آنلاین بازار",
+    trust2: "اسانه کارونه",
+    trust3: "د اعلانونو څارنه",
+    trust4: "مستقیمه اړیکه",
+    footer: "په ټول افغانستان کې اسانه پېر او پلور",
+    rights: "ټول حقوق خوندي دي © بازارک",
+    all: "ټولې کټګورۍ"
+  },
+  en: {
+    brand: "Bazaarak",
+    tagline: "Afghanistan Online Marketplace",
+    home: "Home",
+    categories: "Categories",
+    ads: "Listings",
+    login: "Login / Sign up",
+    post: "＋ Post a free ad",
+    heroTitle: "Find everything in one place!",
+    heroText: "Buy, sell and connect easily",
+    searchPlaceholder: "What are you looking for?",
+    allCities: "All provinces",
+    allCategories: "All categories",
+    search: "Search",
+    clear: "Clear filters",
+    categoryTitle: "Browse Categories",
+    popular: "Popular Categories",
+    latest: "Bazaarak Listings",
+    count: "Total",
+    loading: "Loading listings...",
+    searching: "Searching...",
+    empty: "No listings found.",
+    negotiable: "Negotiable",
+    trust1: "Afghanistan Marketplace",
+    trust2: "Easy to use",
+    trust3: "Moderated listings",
+    trust4: "Direct contact",
+    footer: "Easy buying and selling across Afghanistan",
+    rights: "All rights reserved © Bazaarak",
+    all: "All categories"
+  }
+};
+
+const provinces = [
+  { value: "هرات", fa: "هرات", ps: "هرات", en: "Herat" },
+  { value: "کابل", fa: "کابل", ps: "کابل", en: "Kabul" },
+  { value: "قندهار", fa: "قندهار", ps: "کندهار", en: "Kandahar" },
+  { value: "بلخ", fa: "بلخ", ps: "بلخ", en: "Balkh" },
+  { value: "ننگرهار", fa: "ننگرهار", ps: "ننګرهار", en: "Nangarhar" },
+  { value: "غزنی", fa: "غزنی", ps: "غزني", en: "Ghazni" },
+  { value: "فراه", fa: "فراه", ps: "فراه", en: "Farah" },
+  { value: "بامیان", fa: "بامیان", ps: "بامیان", en: "Bamyan" }
+];
+
 export default function Home() {
   const [categories, setCategories] = useState([]);
   const [ads, setAds] = useState([]);
@@ -13,6 +120,16 @@ export default function Home() {
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [loading, setLoading] = useState(false);
+  const [lang, setLang] = useState("fa");
+
+  const t = translations[lang];
+  const direction = lang === "en" ? "ltr" : "rtl";
+
+  function categoryName(cat) {
+    if (lang === "ps") return cat.name_ps || cat.name_fa;
+    if (lang === "en") return cat.name_en || cat.name_fa;
+    return cat.name_fa;
+  }
 
   async function loadAds(search = "", city = "", category = "") {
     setLoading(true);
@@ -30,13 +147,8 @@ export default function Home() {
       );
     }
 
-    if (city) {
-      query = query.eq("city", city);
-    }
-
-    if (category) {
-      query = query.eq("category_id", Number(category));
-    }
+    if (city) query = query.eq("city", city);
+    if (category) query = query.eq("category_id", Number(category));
 
     const { data, error } = await query;
 
@@ -49,7 +161,7 @@ export default function Home() {
     const items = data || [];
     setAds(items);
 
-    if (items.length === 0) {
+    if (!items.length) {
       setImages({});
       setLoading(false);
       return;
@@ -77,7 +189,7 @@ export default function Home() {
   }
 
   useEffect(() => {
-    async function loadCategories() {
+    async function initialize() {
       const { data, error } = await supabase
         .from("categories")
         .select("*")
@@ -85,14 +197,14 @@ export default function Home() {
 
       if (error) {
         console.error("خطا در دریافت دسته‌بندی‌ها:", error);
-        return;
+      } else {
+        setCategories(data || []);
       }
 
-      setCategories(data || []);
+      loadAds();
     }
 
-    loadCategories();
-    loadAds();
+    initialize();
   }, []);
 
   function handleSearch(e) {
@@ -107,65 +219,133 @@ export default function Home() {
     loadAds();
   }
 
-  return (
-    <main className="site" dir="rtl">
-      <header className="topbar">
-        <div className="brand">🛍️ بازارک</div>
+  function chooseCategory(id) {
+    const value = String(id);
+    setSelectedCategory(value);
+    loadAds(searchText, selectedCity, value);
+  }
 
-        <nav>
-          <Link href="/">صفحه اصلی</Link>
-          <a href="#categories">دسته‌بندی‌ها</a>
-          <a href="#ads">آگهی‌ها</a>
-          <a href="#">درباره ما</a>
-          <a href="#">تماس با ما</a>
+  return (
+    <main
+      dir={direction}
+      style={{
+        minHeight: "100vh",
+        background: "#f5f8f6",
+        color: "#18352a",
+        fontFamily: "Arial, sans-serif"
+      }}
+    >
+      <header
+        style={{
+          background: "#fff",
+          padding: "15px 5%",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 15,
+          flexWrap: "wrap",
+          borderBottom: "1px solid #e5eee8"
+        }}
+      >
+        <Link
+          href="/"
+          style={{
+            color: "#087c4b",
+            fontSize: 25,
+            fontWeight: 900,
+            textDecoration: "none"
+          }}
+        >
+          🛍️ {t.brand}
+        </Link>
+
+        <nav style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
+          <Link href="/" style={navStyle}>{t.home}</Link>
+          <a href="#categories" style={navStyle}>{t.categories}</a>
+          <a href="#ads" style={navStyle}>{t.ads}</a>
         </nav>
 
-        <div className="header-actions">
-          <Link className="login" href="/login">
-            ورود / ثبت‌نام
+        <div style={{ display: "flex", gap: 9, flexWrap: "wrap" }}>
+          <select
+            value={lang}
+            onChange={(e) => setLang(e.target.value)}
+            aria-label="Select language"
+            style={languageStyle}
+          >
+            <option value="fa">فارسی</option>
+            <option value="ps">پښتو</option>
+            <option value="en">English</option>
+          </select>
+
+          <Link href="/login" style={loginStyle}>
+            {t.login}
           </Link>
-          <Link className="post-ad" href="/new-ad">
-            ＋ ثبت آگهی رایگان
+
+          <Link href="/new-ad" style={postStyle}>
+            {t.post}
           </Link>
         </div>
       </header>
 
-      <section className="hero-banner">
-        <div className="hero-copy">
-          <span>بازار آنلاین افغانستان</span>
-          <h1>بازارک</h1>
-          <h2>همه چیز را در یکجا پیدا کنید!</h2>
-          <p>بخرید، بفروشید و ارتباط بگیرید...</p>
-        </div>
-        <div className="hero-bag">🛍️</div>
+      <section
+        style={{
+          margin: "25px auto",
+          width: "90%",
+          maxWidth: 1200,
+          borderRadius: 24,
+          padding: "55px 25px",
+          background: "linear-gradient(120deg, #075c3b, #10a568)",
+          color: "#fff",
+          textAlign: "center"
+        }}
+      >
+        <div style={{ fontSize: 48, marginBottom: 10 }}>🛍️</div>
+        <span style={{ opacity: 0.85 }}>{t.tagline}</span>
+        <h1 style={{ fontSize: "clamp(28px, 5vw, 44px)", margin: "15px 0" }}>
+          {t.heroTitle}
+        </h1>
+        <p style={{ fontSize: 17, margin: 0 }}>{t.heroText}</p>
       </section>
 
-      <form className="search-area" onSubmit={handleSearch}>
+      <form
+        onSubmit={handleSearch}
+        style={{
+          width: "90%",
+          maxWidth: 1100,
+          margin: "-5px auto 35px",
+          padding: 18,
+          background: "#fff",
+          borderRadius: 18,
+          display: "flex",
+          gap: 10,
+          flexWrap: "wrap",
+          boxShadow: "0 8px 30px #12332212"
+        }}
+      >
         <select
-          aria-label="انتخاب ولایت"
           value={selectedCity}
           onChange={(e) => setSelectedCity(e.target.value)}
+          style={fieldStyle}
+          aria-label={t.allCities}
         >
-          <option value="">همه ولایت‌ها</option>
-          <option value="هرات">هرات</option>
-          <option value="کابل">کابل</option>
-          <option value="قندهار">قندهار</option>
-          <option value="بلخ">بلخ</option>
-          <option value="ننگرهار">ننگرهار</option>
-          <option value="غزنی">غزنی</option>
-          <option value="فراه">فراه</option>
-          <option value="بامیان">بامیان</option>
+          <option value="">{t.allCities}</option>
+          {provinces.map((p) => (
+            <option key={p.value} value={p.value}>
+              {p[lang]}
+            </option>
+          ))}
         </select>
 
         <select
-          aria-label="انتخاب دسته‌بندی"
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
+          style={fieldStyle}
+          aria-label={t.allCategories}
         >
-          <option value="">همه دسته‌بندی‌ها</option>
+          <option value="">{t.allCategories}</option>
           {categories.map((cat) => (
             <option key={cat.id} value={cat.id}>
-              {cat.name_fa}
+              {categoryName(cat)}
             </option>
           ))}
         </select>
@@ -173,94 +353,128 @@ export default function Home() {
         <input
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
-          placeholder="چه چیزی را جستجو می‌کنید؟"
+          placeholder={t.searchPlaceholder}
+          style={{ ...fieldStyle, flex: "2 1 220px" }}
         />
 
-        <button type="submit" disabled={loading}>
-          {loading ? "در حال جستجو..." : "جستجو 🔍"}
+        <button type="submit" disabled={loading} style={searchButton}>
+          {loading ? t.searching : `🔍 ${t.search}`}
         </button>
 
-        <button type="button" onClick={clearSearch}>
-          پاک کردن فیلترها
+        <button type="button" onClick={clearSearch} style={clearButton}>
+          {t.clear}
         </button>
       </form>
 
-      <section className="categories" id="categories">
-        <div className="section-heading">
-          <h2>دسته‌بندی آگهی‌ها</h2>
-          <span>همه دسته‌ها</span>
-        </div>
+      <section
+        id="categories"
+        style={{ width: "90%", maxWidth: 1200, margin: "35px auto" }}
+      >
+        <h2 style={headingStyle}>📂 {t.categoryTitle}</h2>
 
-        <div className="category-grid">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(135px, 1fr))",
+            gap: 13
+          }}
+        >
           {categories.map((cat) => (
             <button
-              className="category-card"
               key={cat.id}
               type="button"
-              onClick={() => {
-                setSelectedCategory(String(cat.id));
-                loadAds(searchText, selectedCity, String(cat.id));
-              }}
-              style={{ cursor: "pointer" }}
+              onClick={() => chooseCategory(cat.id)}
+              style={categoryCard}
             >
-              <span>📁</span>
-              <strong>{cat.name_fa}</strong>
+              <span style={{ fontSize: 30 }}>📁</span>
+              <strong>{categoryName(cat)}</strong>
             </button>
           ))}
         </div>
       </section>
 
-      <section className="market-content" id="ads">
-        <aside className="popular">
-          <h3>🔥 دسته‌بندی‌های پرطرفدار</h3>
-
-          {categories.slice(0, 8).map((cat) => (
-            <button
-              className="popular-item"
-              key={cat.id}
-              type="button"
-              onClick={() => {
-                setSelectedCategory(String(cat.id));
-                loadAds(searchText, selectedCity, String(cat.id));
-              }}
+      <section
+        id="ads"
+        style={{
+          width: "90%",
+          maxWidth: 1200,
+          margin: "45px auto",
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 1fr)",
+          gap: 20
+        }}
+      >
+        <div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: 10,
+              marginBottom: 18
+            }}
+          >
+            <h2 style={headingStyle}>⭐ {t.latest}</h2>
+            <span
               style={{
-                display: "block",
-                width: "100%",
-                textAlign: "right",
-                border: 0,
-                background: "transparent",
-                cursor: "pointer",
+                background: "#e2f4e9",
+                color: "#087c4b",
+                padding: "8px 15px",
+                borderRadius: 30,
+                fontWeight: 700
               }}
             >
-              📁 {cat.name_fa}
-            </button>
-          ))}
-        </aside>
-
-        <div className="featured">
-          <div className="section-heading">
-            <h2>⭐ آگهی‌های بازارک</h2>
-            <span>تعداد: {ads.length}</span>
+              {t.count}: {ads.length}
+            </span>
           </div>
 
-          {loading && <p>در حال دریافت آگهی‌ها...</p>}
+          {loading && <p>{t.loading}</p>}
 
           {!loading && ads.length === 0 && (
-            <p>آگهی‌ای با این مشخصات پیدا نشد.</p>
+            <p
+              style={{
+                background: "#fff",
+                padding: 25,
+                borderRadius: 15,
+                textAlign: "center"
+              }}
+            >
+              {t.empty}
+            </p>
           )}
 
-          <div className="ads-grid">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
+              gap: 18
+            }}
+          >
             {ads.map((item) => (
               <Link
                 href={`/listing/${item.id}`}
-                className="ad-card"
                 key={item.id}
                 style={{
+                  background: "#fff",
+                  borderRadius: 17,
+                  overflow: "hidden",
                   textDecoration: "none",
                   color: "inherit",
+                  border: "1px solid #e8eee9",
+                  boxShadow: "0 5px 18px #1233220b"
                 }}
               >
-                <div className="ad-image">
+                <div
+                  style={{
+                    height: 180,
+                    background: "#edf3ef",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    overflow: "hidden"
+                  }}
+                >
                   {images[item.id] ? (
                     <img
                       src={images[item.id]}
@@ -268,24 +482,42 @@ export default function Home() {
                       style={{
                         width: "100%",
                         height: "100%",
-                        objectFit: "cover",
+                        objectFit: "cover"
                       }}
                     />
                   ) : (
-                    "📦"
+                    <span style={{ fontSize: 55 }}>📦</span>
                   )}
                 </div>
 
-                <div className="ad-info">
-                  <strong>{item.title}</strong>
+                <div style={{ padding: 15 }}>
+                  <strong
+                    style={{
+                      display: "block",
+                      fontSize: 16,
+                      marginBottom: 12
+                    }}
+                  >
+                    {item.title}
+                  </strong>
 
-                  <b>
+                  <b style={{ color: "#07804c", fontSize: 17 }}>
                     {item.price
-                      ? Number(item.price).toLocaleString() + " افغانی"
-                      : "قیمت توافقی"}
+                      ? Number(item.price).toLocaleString(
+                          lang === "en" ? "en-US" : lang === "ps" ? "ps-AF" : "fa-AF"
+                        ) + (lang === "en" ? " AFN" : " افغانی")
+                      : t.negotiable}
                   </b>
 
-                  <small>📍 {item.city}</small>
+                  <div
+                    style={{
+                      color: "#718078",
+                      marginTop: 12,
+                      fontSize: 13
+                    }}
+                  >
+                    📍 {item.city}
+                  </div>
                 </div>
               </Link>
             ))}
@@ -293,18 +525,116 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="trust">
-        <div>👥<strong>بازار آنلاین افغانستان</strong></div>
-        <div>⚡<strong>استفاده آسان</strong></div>
-        <div>🛡️<strong>نظارت بر آگهی‌ها</strong></div>
-        <div>🎧<strong>پشتیبانی کاربران</strong></div>
+      <section
+        style={{
+          background: "#e8f5ed",
+          padding: "28px 5%",
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+          gap: 20,
+          textAlign: "center"
+        }}
+      >
+        <div>👥 <strong>{t.trust1}</strong></div>
+        <div>⚡ <strong>{t.trust2}</strong></div>
+        <div>🛡️ <strong>{t.trust3}</strong></div>
+        <div>🤝 <strong>{t.trust4}</strong></div>
       </section>
 
-      <footer>
-        <h2>بازارک | Bazaarak</h2>
-        <p>خرید و فروش آسان در سراسر افغانستان</p>
-        <p>تمام حقوق محفوظ است © بازارک</p>
+      <footer
+        style={{
+          background: "#123d2c",
+          color: "#fff",
+          padding: "35px 15px",
+          textAlign: "center"
+        }}
+      >
+        <h2>🛍️ {t.brand} | Bazaarak</h2>
+        <p>{t.footer}</p>
+        <p style={{ opacity: 0.7, fontSize: 13 }}>{t.rights}</p>
       </footer>
     </main>
   );
 }
+
+const navStyle = {
+  color: "#365548",
+  textDecoration: "none",
+  fontWeight: 600
+};
+
+const languageStyle = {
+  border: "1px solid #dce8df",
+  borderRadius: 9,
+  padding: "9px 10px",
+  background: "#fff",
+  color: "#18352a"
+};
+
+const loginStyle = {
+  textDecoration: "none",
+  color: "#087c4b",
+  border: "1px solid #087c4b",
+  padding: "10px 13px",
+  borderRadius: 9,
+  fontWeight: 700
+};
+
+const postStyle = {
+  textDecoration: "none",
+  color: "#fff",
+  background: "#07804c",
+  padding: "10px 14px",
+  borderRadius: 9,
+  fontWeight: 700
+};
+
+const fieldStyle = {
+  flex: "1 1 150px",
+  minWidth: 0,
+  padding: 13,
+  border: "1px solid #dce8df",
+  borderRadius: 10,
+  background: "#fff",
+  color: "#18352a",
+  fontSize: 14
+};
+
+const searchButton = {
+  border: 0,
+  borderRadius: 10,
+  padding: "12px 22px",
+  background: "#07804c",
+  color: "#fff",
+  fontWeight: 700,
+  cursor: "pointer"
+};
+
+const clearButton = {
+  border: "1px solid #dce8df",
+  borderRadius: 10,
+  padding: "12px 15px",
+  background: "#f5f8f6",
+  color: "#365548",
+  cursor: "pointer"
+};
+
+const headingStyle = {
+  fontSize: 22,
+  color: "#183d2d",
+  marginBottom: 20
+};
+
+const categoryCard = {
+  border: "1px solid #e5eee8",
+  background: "#fff",
+  borderRadius: 15,
+  padding: "22px 10px",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: 12,
+  color: "#24533d",
+  cursor: "pointer",
+  minHeight: 115
+};
