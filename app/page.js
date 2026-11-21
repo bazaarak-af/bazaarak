@@ -388,17 +388,51 @@ useEffect(() => {
             gap: 13
           }}
         >
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              type="button"
-              onClick={() => chooseCategory(cat.id)}
-              style={categoryCard}
-            >
-              <span style={{ fontSize: 30 }}>📁</span>
-              <strong>{categoryName(cat)}</strong>
-            </button>
-          ))}
+        {categories.map((cat) => {
+  const categoryImages = {
+    "املاک": "/categories/real-estate.jpg",
+    "وسایل نقلیه": "/categories/vehicles.jpg",
+    "لوازم الکترونیکی": "/categories/electronics.jpg",
+    "خانه و آشپزخانه": "/categories/home-kitchen.jpg",
+    "کشاورزی": "/categories/agriculture.jpg",
+    "دام و طیور": "/categories/livestock-poultry.jpg",
+    "استخدام و کاریابی": "/categories/jobs.jpg",
+    "خدمات": "/categories/services.jpg",
+    "پوشاک": "/categories/clothing.jpg"
+  };
+
+  return (
+    <button
+      key={cat.id}
+      type="button"
+      onClick={() => chooseCategory(cat.id)}
+      style={{
+        border: "1px solid #e5eee8",
+        background: "#fff",
+        borderRadius: 15,
+        padding: 0,
+        overflow: "hidden",
+        cursor: "pointer",
+        color: "#24533d",
+        boxShadow: "0 5px 16px #12332212"
+      }}
+    >
+      <img
+        src={categoryImages[cat.name_fa] || "/categories/real-estate.jpg"}
+        alt={categoryName(cat)}
+        style={{
+          width: "100%",
+          height: 125,
+          objectFit: "cover",
+          display: "block"
+        }}
+      />
+      <div style={{ padding: "13px 8px", fontWeight: 700 }}>
+        {categoryName(cat)}
+      </div>
+    </button>
+  );
+})}  
         </div>
       </section>
 
