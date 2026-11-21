@@ -95,3 +95,187 @@ footer {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+/* ===== Bazaarak Responsive Header ===== */
+
+.bazaar-header {
+  width: 100%;
+  background: #ffffff;
+  border-bottom: 1px solid #e5eee8;
+  box-shadow: 0 4px 18px rgba(0, 60, 35, 0.06);
+  direction: rtl;
+}
+
+.bazaar-header-top {
+  min-height: 115px;
+  padding: 12px 4%;
+  display: grid;
+  grid-template-columns: 1fr 1.3fr 1fr;
+  align-items: center;
+  gap: 15px;
+}
+
+.bazaar-logo {
+  position: relative;
+  min-height: 95px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: #075c38;
+  text-decoration: none;
+}
+
+.bazaar-logo-symbol {
+  width: 100%;
+  max-width: 290px;
+  height: 100px;
+}
+
+.bazaar-logo span {
+  position: absolute;
+  bottom: 3px;
+  right: 18px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #075c38;
+}
+
+.bazaar-header-actions {
+  grid-column: 3;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.bazaar-login,
+.bazaar-post,
+.bazaar-language {
+  min-height: 48px;
+  padding: 10px 18px;
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bazaar-login {
+  color: #087a45;
+  border: 1px solid #087a45;
+  background: #fff;
+}
+
+.bazaar-post {
+  color: #fff;
+  background: #087a45;
+  border: 1px solid #087a45;
+  box-shadow: 0 5px 13px rgba(8, 122, 69, 0.18);
+}
+
+.bazaar-language {
+  color: #263b31;
+  background: #fff;
+  border: 1px solid #e0e8e2;
+  cursor: pointer;
+}
+
+.bazaar-nav {
+  min-height: 55px;
+  padding: 0 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 55px;
+  border-top: 1px solid #edf2ee;
+}
+
+.bazaar-nav a {
+  color: #244c39;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 16px 5px;
+}
+
+.bazaar-nav a:hover {
+  color: #07864d;
+}
+
+/* Mobile */
+@media (max-width: 650px) {
+  .bazaar-header-top {
+    min-height: auto;
+    padding: 12px 4%;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .bazaar-logo {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    min-height: 75px;
+    justify-content: center;
+  }
+
+  .bazaar-logo-symbol {
+    max-width: 220px;
+    height: 75px;
+  }
+
+  .bazaar-logo span {
+    right: 50%;
+    transform: translateX(50%);
+    bottom: 0;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .bazaar-header-actions {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .bazaar-language {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .bazaar-login {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .bazaar-post {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .bazaar-login,
+  .bazaar-post,
+  .bazaar-language {
+    min-height: 43px;
+    padding: 8px 10px;
+    font-size: 13px;
+    width: 100%;
+  }
+
+  .bazaar-nav {
+    min-height: 48px;
+    padding: 0 8px;
+    justify-content: space-around;
+    gap: 5px;
+  }
+
+  .bazaar-nav a {
+    font-size: 12px;
+    padding: 14px 4px;
+    white-space: nowrap;
+  }
+  }
