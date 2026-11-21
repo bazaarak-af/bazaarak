@@ -279,3 +279,158 @@ footer {
     white-space: nowrap;
   }
   }
+
+/* ===== Bazaarak New Header Design ===== */
+
+.bazaar-header {
+  width: 100%;
+  background: #fff;
+  direction: rtl;
+  border-bottom: 1px solid #e5eee8;
+  box-shadow: 0 3px 15px rgba(0, 60, 35, 0.06);
+}
+
+.bazaar-header-top {
+  min-height: 150px;
+  padding: 22px 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: linear-gradient(110deg, #f1faf4, #ffffff);
+}
+
+.bazaar-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: #087a45;
+}
+
+.bazaar-brand strong {
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.bazaar-brand span {
+  font-size: 17px;
+  color: #315b46;
+}
+
+.bazaar-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.bazaar-login,
+.bazaar-post,
+.bazaar-language {
+  min-height: 48px;
+  padding: 10px 20px;
+  border-radius: 28px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bazaar-login {
+  color: #087a45;
+  background: #fff;
+  border: 1px solid #087a45;
+}
+
+.bazaar-post {
+  color: #fff;
+  background: #087a45;
+  border: 1px solid #087a45;
+}
+
+.bazaar-language {
+  color: #244c39;
+  background: #fff;
+  border: 1px solid #dce9df;
+}
+
+.bazaar-nav {
+  min-height: 58px;
+  padding: 0 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 55px;
+  background: #fff;
+  border-top: 1px solid #edf2ee;
+}
+
+.bazaar-nav a {
+  color: #244c39;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 18px 8px;
+}
+
+.bazaar-nav a:hover {
+  color: #07864d;
+}
+
+/* Mobile */
+@media (max-width: 650px) {
+  .bazaar-header-top {
+    padding: 20px 4%;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .bazaar-brand {
+    align-items: center;
+    text-align: center;
+  }
+
+  .bazaar-brand strong {
+    font-size: 23px;
+  }
+
+  .bazaar-brand span {
+    font-size: 14px;
+  }
+
+  .bazaar-header-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+  }
+
+  .bazaar-language,
+  .bazaar-login,
+  .bazaar-post {
+    width: 100%;
+    min-height: 45px;
+    padding: 8px;
+    font-size: 13px;
+  }
+
+  .bazaar-post {
+    grid-column: 1 / -1;
+  }
+
+  .bazaar-nav {
+    min-height: 50px;
+    padding: 0 5px;
+    justify-content: space-around;
+    gap: 4px;
+  }
+
+  .bazaar-nav a {
+    font-size: 12px;
+    padding: 15px 4px;
+    white-space: nowrap;
+  }
+}
