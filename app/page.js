@@ -336,63 +336,97 @@ useEffect(() => {
 </section>
 
       <form
-        onSubmit={handleSearch}
-        style={{
-          width: "90%",
-          maxWidth: 1100,
-          margin: "-5px auto 35px",
-          padding: 18,
-          background: "#fff",
-          borderRadius: 18,
-          display: "flex",
-          gap: 10,
-          flexWrap: "wrap",
-          boxShadow: "0 8px 30px #12332212"
-        }}
-      >
-        <select
-          value={selectedCity}
-          onChange={(e) => setSelectedCity(e.target.value)}
-          style={fieldStyle}
-          aria-label={t.allCities}
-        >
-          <option value="">{t.allCities}</option>
-          {provinces.map((p) => (
-            <option key={p.value} value={p.value}>
-              {p[lang]}
-            </option>
-          ))}
-        </select>
+  onSubmit={handleSearch}
+  style={{
+    width: "90%",
+    maxWidth: 1100,
+    margin: "0 auto 35px",
+    padding: 18,
+    background: "#fff",
+    borderRadius: 20,
+    display: "flex",
+    alignItems: "center",
+    gap: 12,
+    flexWrap: "wrap",
+    boxShadow: "0 8px 30px #12332212",
+    border: "1px solid #edf1ee",
+    boxSizing: "border-box"
+  }}
+>
+  <select
+    value={selectedCity}
+    onChange={(e) => setSelectedCity(e.target.value)}
+    style={{
+      ...fieldStyle,
+      flex: "1 1 190px",
+      minWidth: 0,
+      boxSizing: "border-box"
+    }}
+    aria-label={t.allCities}
+  >
+    <option value="">{t.allCities}</option>
+    {provinces.map((p) => (
+      <option key={p.value} value={p.value}>
+        {p[lang]}
+      </option>
+    ))}
+  </select>
 
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          style={fieldStyle}
-          aria-label={t.allCategories}
-        >
-          <option value="">{t.allCategories}</option>
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {categoryName(cat)}
-            </option>
-          ))}
-        </select>
+  <select
+    value={selectedCategory}
+    onChange={(e) => setSelectedCategory(e.target.value)}
+    style={{
+      ...fieldStyle,
+      flex: "1 1 190px",
+      minWidth: 0,
+      boxSizing: "border-box"
+    }}
+    aria-label={t.allCategories}
+  >
+    <option value="">{t.allCategories}</option>
+    {categories.map((cat) => (
+      <option key={cat.id} value={cat.id}>
+        {categoryName(cat)}
+      </option>
+    ))}
+  </select>
 
-        <input
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          placeholder={t.searchPlaceholder}
-          style={{ ...fieldStyle, flex: "2 1 220px" }}
-        />
+  <input
+    value={searchText}
+    onChange={(e) => setSearchText(e.target.value)}
+    placeholder={t.searchPlaceholder}
+    style={{
+      ...fieldStyle,
+      flex: "2 1 240px",
+      minWidth: 0,
+      boxSizing: "border-box"
+    }}
+  />
 
-        <button type="submit" disabled={loading} style={searchButton}>
-          {loading ? t.searching : `🔍 ${t.search}`}
-        </button>
+  <button
+    type="submit"
+    disabled={loading}
+    style={{
+      ...searchButton,
+      flex: "1 1 135px",
+      minWidth: 0
+    }}
+  >
+    {loading ? t.searching : `🔍 ${t.search}`}
+  </button>
 
-        <button type="button" onClick={clearSearch} style={clearButton}>
-          {t.clear}
-        </button>
-      </form>
+  <button
+    type="button"
+    onClick={clearSearch}
+    style={{
+      ...clearButton,
+      flex: "1 1 135px",
+      minWidth: 0
+    }}
+  >
+    {t.clear}
+  </button>
+</form>
 
       <section
         id="categories"
