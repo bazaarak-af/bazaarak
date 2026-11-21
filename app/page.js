@@ -428,66 +428,92 @@ useEffect(() => {
   </button>
 </form>
 
-      <section
-        id="categories"
-        style={{ width: "90%", maxWidth: 1200, margin: "35px auto" }}
-      >
-        <h2 style={headingStyle}>📂 {t.categoryTitle}</h2>
+     <section
+  id="categories"
+  style={{
+    width: "90%",
+    maxWidth: 1200,
+    margin: "45px auto"
+  }}
+>
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      marginBottom: 22
+    }}
+  >
+    <h2 style={{ ...headingStyle, margin: 0 }}>
+      📂 {t.categoryTitle}
+    </h2>
+  </div>
 
-        <div
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit, minmax(145px, 1fr))",
+      gap: 16
+    }}
+  >
+    {categories.map((cat) => {
+      const categoryImages = {
+        "املاک": "/categories/real-estate.jpg",
+        "وسایل نقلیه": "/categories/vehicles.jpg",
+        "لوازم الکترونیکی": "/categories/electronics.jpg",
+        "خانه و آشپزخانه": "/categories/home-kitchen.jpg",
+        "کشاورزی": "/categories/agriculture.jpg",
+        "دام و طیور": "/categories/livestock-poultry.jpg",
+        "استخدام و کاریابی": "/categories/jobs.jpg",
+        "خدمات": "/categories/services.jpg",
+        "پوشاک": "/categories/clothing.jpg"
+      };
+
+      return (
+        <button
+          key={cat.id}
+          type="button"
+          onClick={() => chooseCategory(cat.id)}
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(135px, 1fr))",
-            gap: 13
+            border: "1px solid #e8eee9",
+            background: "#fff",
+            borderRadius: 18,
+            padding: 8,
+            overflow: "hidden",
+            cursor: "pointer",
+            color: "#24533d",
+            boxShadow: "0 5px 18px rgba(18,51,34,0.08)",
+            textAlign: "center",
+            transition: "transform 0.2s ease"
           }}
         >
-        {categories.map((cat) => {
-  const categoryImages = {
-    "املاک": "/categories/real-estate.jpg",
-    "وسایل نقلیه": "/categories/vehicles.jpg",
-    "لوازم الکترونیکی": "/categories/electronics.jpg",
-    "خانه و آشپزخانه": "/categories/home-kitchen.jpg",
-    "کشاورزی": "/categories/agriculture.jpg",
-    "دام و طیور": "/categories/livestock-poultry.jpg",
-    "استخدام و کاریابی": "/categories/jobs.jpg",
-    "خدمات": "/categories/services.jpg",
-    "پوشاک": "/categories/clothing.jpg"
-  };
+          <img
+            src={categoryImages[cat.name_fa] || "/categories/real-estate.jpg"}
+            alt={categoryName(cat)}
+            style={{
+              width: "100%",
+              height: 125,
+              objectFit: "cover",
+              display: "block",
+              borderRadius: 13
+            }}
+          />
 
-  return (
-    <button
-      key={cat.id}
-      type="button"
-      onClick={() => chooseCategory(cat.id)}
-      style={{
-        border: "1px solid #e5eee8",
-        background: "#fff",
-        borderRadius: 15,
-        padding: 0,
-        overflow: "hidden",
-        cursor: "pointer",
-        color: "#24533d",
-        boxShadow: "0 5px 16px #12332212"
-      }}
-    >
-      <img
-        src={categoryImages[cat.name_fa] || "/categories/real-estate.jpg"}
-        alt={categoryName(cat)}
-        style={{
-          width: "100%",
-          height: 125,
-          objectFit: "cover",
-          display: "block"
-        }}
-      />
-      <div style={{ padding: "13px 8px", fontWeight: 700 }}>
-        {categoryName(cat)}
-      </div>
-    </button>
-  );
-})}  
-        </div>
-      </section>
+          <div
+            style={{
+              padding: "14px 5px 9px",
+              fontWeight: 800,
+              fontSize: 15,
+              color: "#174b35"
+            }}
+          >
+            {categoryName(cat)}
+          </div>
+        </button>
+      );
+    })}
+  </div>
+</section> 
 
       <section
         id="ads"
