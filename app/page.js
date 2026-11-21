@@ -305,7 +305,7 @@ useEffect(() => {
     borderRadius: 24,
     overflow: "hidden",
     backgroundImage:
-      "linear-gradient(90deg, rgba(0,0,0,0.65), rgba(0,0,0,0.15)), url('/banners/herat-banner.png')",
+      "linear-gradient(90deg, rgba(0,0,0,0.65), rgba(0,0,0,0.15)), url('/banners/file_000000000ae08211a11b06bdd61091c2.png')
     backgroundSize: "cover",
     backgroundPosition: "center",
     display: "flex",
