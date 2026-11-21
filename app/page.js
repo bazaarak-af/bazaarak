@@ -121,7 +121,12 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [loading, setLoading] = useState(false);
   const [lang, setLang] = useState("fa");
-
+useEffect(() => {
+  const savedLanguage = localStorage.getItem("bazaarak-language");
+  if (savedLanguage && translations[savedLanguage]) {
+    setLang(savedLanguage);
+  }
+}, []);
   const t = translations[lang];
   const direction = lang === "en" ? "ltr" : "rtl";
 
@@ -268,7 +273,11 @@ export default function Home() {
         <div style={{ display: "flex", gap: 9, flexWrap: "wrap" }}>
           <select
             value={lang}
-            onChange={(e) => setLang(e.target.value)}
+            onChange={(e) => {
+  const value = e.target.value;
+  setLang(value);
+  localStorage.setItem("bazaarak-language", value);
+}}
             aria-label="Select language"
             style={languageStyle}
           >
