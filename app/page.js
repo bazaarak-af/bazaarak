@@ -297,24 +297,43 @@ useEffect(() => {
       </header>
 
       <section
-        style={{
-          margin: "25px auto",
-          width: "90%",
-          maxWidth: 1200,
-          borderRadius: 24,
-          padding: "55px 25px",
-          background: "linear-gradient(120deg, #075c3b, #10a568)",
-          color: "#fff",
-          textAlign: "center"
-        }}
-      >
-        <div style={{ fontSize: 48, marginBottom: 10 }}>🛍️</div>
-        <span style={{ opacity: 0.85 }}>{t.tagline}</span>
-        <h1 style={{ fontSize: "clamp(28px, 5vw, 44px)", margin: "15px 0" }}>
-          {t.heroTitle}
-        </h1>
-        <p style={{ fontSize: 17, margin: 0 }}>{t.heroText}</p>
-      </section>
+  style={{
+    margin: "25px auto",
+    width: "90%",
+    maxWidth: 1200,
+    minHeight: 320,
+    borderRadius: 24,
+    overflow: "hidden",
+    backgroundImage:
+      "linear-gradient(90deg, rgba(0,0,0,0.65), rgba(0,0,0,0.15)), url('/banners/herat-banner.png')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    display: "flex",
+    alignItems: "center",
+    padding: "40px",
+    boxSizing: "border-box",
+    color: "#fff",
+    textAlign: "right"
+  }}
+>
+  <div style={{ maxWidth: 600 }}>
+    <h1 style={{ fontSize: 36, fontWeight: "bold", marginBottom: 15 }}>
+      {lang === "ps"
+        ? "بازارک؛ هر څه په یوه ځای کې!"
+        : lang === "en"
+        ? "Bazaarak – Everything in One Place!"
+        : "بازارک؛ همه چیز در یک‌جا پیدا کنید!"}
+    </h1>
+
+    <p style={{ fontSize: 18, lineHeight: 1.8 }}>
+      {lang === "ps"
+        ? "پېرود او پلور په اسانه او چټک ډول"
+        : lang === "en"
+        ? "Buy and sell easily and quickly"
+        : "خرید و فروش آسان، سریع و مطمئن در سراسر افغانستان"}
+    </p>
+  </div>
+</section>
 
       <form
         onSubmit={handleSearch}
