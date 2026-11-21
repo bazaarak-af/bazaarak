@@ -240,61 +240,66 @@ useEffect(() => {
         fontFamily: "Arial, sans-serif"
       }}
     >
-      <header
-        style={{
-          background: "#fff",
-          padding: "15px 5%",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: 15,
-          flexWrap: "wrap",
-          borderBottom: "1px solid #e5eee8"
-        }}
+      <header className="bazaar-header">
+
+  <div className="bazaar-header-top">
+
+    <Link href="/" className="bazaar-logo">
+      <svg
+        viewBox="0 0 260 120"
+        className="bazaar-logo-symbol"
+        aria-label="لوگوی بازارک"
       >
-        <Link
-          href="/"
-          style={{
-            color: "#087c4b",
-            fontSize: 25,
-            fontWeight: 900,
-            textDecoration: "none"
-          }}
-        >
-          🛍️ {t.brand}
-        </Link>
+        <path
+          d="M245 8 C205 45 180 48 145 65 C110 82 75 85 18 110 C65 112 110 105 150 88 C190 70 220 48 245 8Z"
+          fill="#07864d"
+        />
+        <path
+          d="M235 13 C205 43 178 55 143 70 C110 85 80 94 42 104"
+          fill="none"
+          stroke="#12b86b"
+          strokeWidth="5"
+          strokeLinecap="round"
+        />
+      </svg>
+      <span>بازار خرید و فروش افغانستان</span>
+    </Link>
 
-        <nav style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
-          <Link href="/" style={navStyle}>{t.home}</Link>
-          <a href="#categories" style={navStyle}>{t.categories}</a>
-          <a href="#ads" style={navStyle}>{t.ads}</a>
-        </nav>
+    <div className="bazaar-header-actions">
 
-        <div style={{ display: "flex", gap: 9, flexWrap: "wrap" }}>
-          <select
-            value={lang}
-            onChange={(e) => {
-  const value = e.target.value;
-  setLang(value);
-  localStorage.setItem("bazaarak-language", value);
-}}
-            aria-label="Select language"
-            style={languageStyle}
-          >
-            <option value="fa">فارسی</option>
-            <option value="ps">پښتو</option>
-            <option value="en">English</option>
-          </select>
+      <Link href="/login" className="bazaar-login">
+        {t.login}
+      </Link>
 
-          <Link href="/login" style={loginStyle}>
-            {t.login}
-          </Link>
+      <Link href="/new-ad" className="bazaar-post">
+        + {t.post}
+      </Link>
 
-          <Link href="/new-ad" style={postStyle}>
-            {t.post}
-          </Link>
-        </div>
-      </header>
+      <select
+        value={lang}
+        onChange={(e) => {
+          const value = e.target.value;
+          setLang(value);
+          localStorage.setItem("bazaarak-language", value);
+        }}
+        aria-label="Select language"
+        className="bazaar-language"
+      >
+        <option value="fa">فارسی</option>
+        <option value="ps">پښتو</option>
+        <option value="en">English</option>
+      </select>
+
+    </div>
+  </div>
+
+  <nav className="bazaar-nav">
+    <Link href="/">{t.home}</Link>
+    <a href="#categories">{t.categories}</a>
+    <a href="#ads">{t.ads}</a>
+  </nav>
+
+</header>
 
       <section
   style={{
