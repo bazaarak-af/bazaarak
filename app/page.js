@@ -241,31 +241,26 @@ useEffect(() => {
       }}
     >
       <header className="bazaar-header">
-
   <div className="bazaar-header-top">
-
-    <Link href="/" className="bazaar-logo">
-      <svg
-        viewBox="0 0 260 120"
-        className="bazaar-logo-symbol"
-        aria-label="لوگوی بازارک"
-      >
-        <path
-          d="M245 8 C205 45 180 48 145 65 C110 82 75 85 18 110 C65 112 110 105 150 88 C190 70 220 48 245 8Z"
-          fill="#07864d"
-        />
-        <path
-          d="M235 13 C205 43 178 55 143 70 C110 85 80 94 42 104"
-          fill="none"
-          stroke="#12b86b"
-          strokeWidth="5"
-          strokeLinecap="round"
-        />
-      </svg>
-      <span>بازار خرید و فروش افغانستان</span>
-    </Link>
+    <div className="bazaar-brand">
+      <strong>بازار خرید و فروش افغانستان</strong>
+      <span>خرید آسان، فروش مطمئن</span>
+    </div>
 
     <div className="bazaar-header-actions">
+      <select
+        value={lang}
+        onChange={(e) => {
+          const value = e.target.value;
+          setLang(value);
+          localStorage.setItem("bazaarak-language", value);
+        }}
+        className="bazaar-language"
+      >
+        <option value="fa">فارسی</option>
+        <option value="ps">پښتو</option>
+        <option value="en">English</option>
+      </select>
 
       <Link href="/login" className="bazaar-login">
         {t.login}
@@ -274,22 +269,6 @@ useEffect(() => {
       <Link href="/new-ad" className="bazaar-post">
         + {t.post}
       </Link>
-
-      <select
-        value={lang}
-        onChange={(e) => {
-          const value = e.target.value;
-          setLang(value);
-          localStorage.setItem("bazaarak-language", value);
-        }}
-        aria-label="Select language"
-        className="bazaar-language"
-      >
-        <option value="fa">فارسی</option>
-        <option value="ps">پښتو</option>
-        <option value="en">English</option>
-      </select>
-
     </div>
   </div>
 
@@ -298,9 +277,7 @@ useEffect(() => {
     <a href="#categories">{t.categories}</a>
     <a href="#ads">{t.ads}</a>
   </nav>
-
 </header>
-
       <section
   style={{
     margin: "25px auto",
