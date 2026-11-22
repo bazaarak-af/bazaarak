@@ -241,35 +241,57 @@ useEffect(() => {
       }}
     >
       <header className="bazaar-header">
-  <div className="bazaar-header-top">
+  <div
+      
+
+<header className="bazaar-header">
+  <div
+    className="bazaar-hero-header"
+    style={{
+      backgroundImage:
+        "linear-gradient(rgba(0,35,20,0.25), rgba(0,35,20,0.35)), url('/banners/file_000000000ae08211a11b06bdd61091c2.png')"
+    }}
+  >
     <div className="bazaar-brand">
-      <strong>بازار خرید و فروش افغانستان</strong>
-      <span>خرید آسان، فروش مطمئن</span>
+      <strong>
+        {lang === "ps"
+          ? "د افغانستان د پېر او پلور بازار"
+          : lang === "en"
+          ? "Afghanistan Buy & Sell Marketplace"
+          : "بازار خرید و فروش افغانستان"}
+      </strong>
+      <span>
+        {lang === "ps"
+          ? "اسانه پېرود، ډاډمن پلور"
+          : lang === "en"
+          ? "Easy Buying, Trusted Selling"
+          : "خرید آسان، فروش مطمئن"}
+      </span>
     </div>
+  </div>
 
-    <div className="bazaar-header-actions">
-      <select
-        value={lang}
-        onChange={(e) => {
-          const value = e.target.value;
-          setLang(value);
-          localStorage.setItem("bazaarak-language", value);
-        }}
-        className="bazaar-language"
-      >
-        <option value="fa">فارسی</option>
-        <option value="ps">پښتو</option>
-        <option value="en">English</option>
-      </select>
+  <div className="bazaar-header-actions">
+    <select
+      value={lang}
+      onChange={(e) => {
+        const value = e.target.value;
+        setLang(value);
+        localStorage.setItem("bazaarak-language", value);
+      }}
+      className="bazaar-language"
+    >
+      <option value="fa">فارسی</option>
+      <option value="ps">پښتو</option>
+      <option value="en">English</option>
+    </select>
 
-      <Link href="/login" className="bazaar-login">
-        {t.login}
-      </Link>
+    <Link href="/login" className="bazaar-login">
+      {t.login}
+    </Link>
 
-      <Link href="/new-ad" className="bazaar-post">
-        + {t.post}
-      </Link>
-    </div>
+    <Link href="/new-ad" className="bazaar-post">
+      + {t.post}
+    </Link>
   </div>
 
   <nav className="bazaar-nav">
@@ -278,7 +300,6 @@ useEffect(() => {
     <a href="#ads">{t.ads}</a>
   </nav>
 </header>
-      
 
       <form
   onSubmit={handleSearch}
