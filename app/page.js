@@ -287,8 +287,9 @@ useEffect(() => {
     borderRadius: 24,
     overflow: "hidden",
     backgroundImage:
-      "linear-gradient(90deg, rgba(0,0,0,0.65), rgba(0,0,0,0.15)), url('/banners/file_000000008ba882118a87e81d5bbd4ed6.png')",
-    backgroundSize: "cover","
+  "linear-gradient(90deg, rgba(0,0,0,0.65), rgba(0,0,0,0.15)), url('/banners/file_000000008ba882118a87e81d5bbd4ed6.png')",
+backgroundSize: "cover",
+backgroundPosition: "center",
     backgroundPosition: "center",
     display: "flex",
     alignItems: "center",
