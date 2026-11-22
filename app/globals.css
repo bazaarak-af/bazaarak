@@ -434,3 +434,122 @@ footer {
     white-space: nowrap;
   }
 }
+
+/* ===== Bazaarak Image Header ===== */
+
+.bazaar-hero-header {
+  width: 100%;
+  min-height: 260px;
+  background-size: cover;
+  background-position: center 45%;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 35px 7%;
+  box-sizing: border-box;
+}
+
+.bazaar-hero-header .bazaar-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: right;
+  gap: 12px;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.65);
+}
+
+.bazaar-hero-header .bazaar-brand strong {
+  font-size: clamp(25px, 4vw, 44px);
+  font-weight: 900;
+}
+
+.bazaar-hero-header .bazaar-brand span {
+  font-size: clamp(15px, 2vw, 23px);
+  color: white;
+}
+
+.bazaar-header-actions {
+  padding: 15px 4%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: #f5faf6;
+  flex-wrap: wrap;
+}
+
+.bazaar-nav {
+  min-height: 60px;
+  padding: 0 5%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  border-top: 1px solid #edf2ee;
+}
+
+.bazaar-nav a {
+  color: #087a45;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 17px 8px;
+}
+
+@media (max-width: 650px) {
+  .bazaar-hero-header {
+    min-height: 175px;
+    padding: 22px 5%;
+    background-position: center center;
+  }
+
+  .bazaar-hero-header .bazaar-brand {
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+
+  .bazaar-hero-header .bazaar-brand strong {
+    font-size: 23px;
+    line-height: 1.7;
+  }
+
+  .bazaar-hero-header .bazaar-brand span {
+    font-size: 14px;
+  }
+
+  .bazaar-header-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 12px 4%;
+  }
+
+  .bazaar-language,
+  .bazaar-login,
+  .bazaar-post {
+    width: 100%;
+    min-height: 43px;
+    font-size: 13px;
+    box-sizing: border-box;
+  }
+
+  .bazaar-post {
+    grid-column: 1 / -1;
+  }
+
+  .bazaar-nav {
+    min-height: 48px;
+    padding: 0 5px;
+    gap: 3px;
+  }
+
+  .bazaar-nav a {
+    font-size: 12px;
+    padding: 14px 4px;
+    white-space: nowrap;
+  }
+}
