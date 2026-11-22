@@ -240,10 +240,8 @@ useEffect(() => {
         fontFamily: "Arial, sans-serif"
       }}
     >
-      <header className="bazaar-header">
-  <div
-      
-
+    
+    
 <header className="bazaar-header">
   <div
     className="bazaar-hero-header"
